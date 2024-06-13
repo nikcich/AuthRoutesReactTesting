@@ -9,7 +9,17 @@ const useAuthentication = (children) => {
 
     const fetchAuthToken = async () => {
         try {
-            const response = await fetch('/abc/api/authenticate'); // Change this URL to your authentication endpoint
+            const response = await fetch('/abc/api/authenticate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include', // Ensure cookies are included
+                body: JSON.stringify({
+                    username: 'user',
+                    password: 'password'
+                })
+            }); // Change this URL to your authentication endpoint
             if (!response.ok) {
                 throw new Error('Authentication failed');
             }

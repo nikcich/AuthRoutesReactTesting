@@ -8,7 +8,13 @@ function App() {
 
   useEffect(() => {
     if (data == null) {
-      fetch('/abc/api/data').then((res) => {
+
+      // Protected endpoint
+
+      fetch('/abc/api/data', {
+        method: 'GET',
+        credentials: 'include' // Ensure cookies are included
+      }).then((res) => {
         return res.json();
       }).then((res) => {
         setData(res);
@@ -23,4 +29,19 @@ function App() {
   )
 }
 
-export default App
+export default App;
+
+/*
+  Example custom fetch to have the credentials include on all fetches
+*/
+
+function customFetch(input, init = {}) {
+  // Ensure init is an object and set the credentials option to 'include'
+  const customInit = {
+    ...init,
+    credentials: 'include',
+  };
+
+  // Call the original fetch function with the modified init object
+  return fetch(input, customInit);
+}
