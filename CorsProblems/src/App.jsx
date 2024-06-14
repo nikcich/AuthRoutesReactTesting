@@ -1,47 +1,63 @@
-import { useState, useEffect } from 'react'
 import './App.css'
-import AuthWrapper from './AuthWrapper';
+import React, { useEffect, useMemo, useReducer } from 'react';
+import { Provider, useSelector, useDispatch } from 'react-redux';
+import store from './contexts/store';
+import { setStateA, setStateB } from './contexts/stateSlice';
 
 function App() {
 
-  const [data, setData] = useState(null);
-
   useEffect(() => {
-    if (data == null) {
-
-      // Protected endpoint
-
-      fetch('/abc/api/data', {
-        method: 'GET',
-        credentials: 'include' // Ensure cookies are included
-      }).then((res) => {
-        return res.json();
-      }).then((res) => {
-        setData(res);
-      });
-    }
-  });
+    console.log("ROOT LEVEL");
+  }, []);
 
   return (
-    <>
-      <h1>Authenticated: {data?.message}</h1>
-    </>
-  )
+    <Provider store={store}>
+      <h1>HI</h1>
+      <SubComponent />
+      <OtherComponent />
+    </Provider>
+  );
+}
+
+function SubComponent() {
+
+  const stateA = useSelector((state) => {
+    return state.state.stateA;
+  });
+
+  const dispatch = useDispatch();
+
+  const handleClick = () => {
+    dispatch(setStateA(Date.now()));
+  }
+
+  return (
+    <div style={{ outline: '1px solid red' }}>
+      <button onClick={handleClick}>Click me</button>
+      {stateA}
+    </div>
+  );
+}
+
+// Wrap OtherComponent with React.memo to prevent it from re-rendering unnecessarily
+const OtherComponent = () => {
+
+  const stateB = useSelector((state) => {
+    return state.state.stateB;
+  });
+
+  const dispatch = useDispatch();
+
+  const handleClick = () => {
+    dispatch(setStateB(Date.now()));
+  }
+
+  return (
+    <div style={{ outline: '1px solid red' }}>
+      <button onClick={handleClick}>Click me</button>
+      {stateB}
+    </div>
+  );
 }
 
 export default App;
-
-/*
-  Example custom fetch to have the credentials include on all fetches
-*/
-
-function customFetch(input, init = {}) {
-  // Ensure init is an object and set the credentials option to 'include'
-  const customInit = {
-    ...init,
-    credentials: 'include',
-  };
-
-  // Call the original fetch function with the modified init object
-  return fetch(input, customInit);
-}

@@ -8,11 +8,11 @@ import AuthWrapper from './AuthWrapper.jsx';
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <AuthWrapper>
-        <App />
-      </AuthWrapper>
-    </QueryClientProvider>
-  </React.StrictMode>,
+
+  <QueryClientProvider client={queryClient}>
+
+    <App />
+
+  </QueryClientProvider>
+  ,
 )
